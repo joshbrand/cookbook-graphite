@@ -13,7 +13,7 @@ export CC_CONFIG="$CC_HOME/etc/carbon-<%= @name %>.conf"
 CC_USER="<%= @user %>"
 LOGDIR="/var/log/carbon-<%= @name %>"
 CC_LOG="$LOGDIR/carbon-<%= @name %>.log"
-BIN_SCRIPT="python $CC_HOME/bin/carbon-<%= @name %>.py start >> $CC_LOG 2>&1"
+BIN_SCRIPT="<%= @python_binary %> $CC_HOME/bin/carbon-<%= @name %>.py start >> $CC_LOG 2>&1"
 
 . /etc/init.d/functions
 

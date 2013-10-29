@@ -27,6 +27,12 @@ end
 
 python_pip "simplejson"
 
+if platform_family?("rhel") and platform_version.to_i < 6 do
+  python_binary = "python26"
+else
+  python_binary = "python"
+end
+
 if node['graphite']['carbon']['enable_amqp']
   include_recipe 'python::pip'
   python_pip 'txamqp' do
@@ -58,7 +64,7 @@ execute 'untar carbon' do
 end
 
 execute 'install carbon' do
-  command "python setup.py install --prefix=#{node['graphite']['base_dir']} --install-lib=#{node['graphite']['base_dir']}/lib"
+  command "#{python_binary} setup.py install --prefix=#{node['graphite']['base_dir']} --install-lib=#{node['graphite']['base_dir']}/lib"
   creates "#{node['graphite']['base_dir']}/lib/carbon-#{version}-py#{pyver}.egg-info"
   cwd "#{Chef::Config[:file_cache_path]}/carbon-#{version}"
 end
@@ -70,7 +76,8 @@ template "#{node['graphite']['base_dir']}/conf/carbon.conf" do
   carbon_options['amqp_password'] = amqp_password unless amqp_password.nil?
   variables(
     :storage_dir => node['graphite']['storage_dir'],
-    :carbon_options => carbon_options
+    :carbon_options => carbon_options,
+    :python_binary => python_binary
   )
 end
 
