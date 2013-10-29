@@ -27,7 +27,7 @@ end
 
 python_pip "simplejson"
 
-if platform_family?("rhel") and platform_version.to_i < 6 do
+if platform_family?("rhel") and platform_version.to_i < 6
   python_binary = "python26"
 else
   python_binary = "python"
