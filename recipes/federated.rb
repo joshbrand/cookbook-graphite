@@ -41,8 +41,8 @@ if Chef::Config[:solo]
     "127.0.0.1:#{node['graphite']['carbon']['pickle_receiver_port']}:a"
   ]
 else
-  if node['graphite']['chef_role']
-    graphite_results = search(:node, "roles:#{node['graphite']['chef_role']} AND chef_environment:#{node.chef_environment}").sort
+  if node['graphite']['graphite_query'] and
+    graphite_results = search(:node, node['graphite']['graphite_query']).sort
     if graphite_results
       destinations = []
       cluster_servers = []
