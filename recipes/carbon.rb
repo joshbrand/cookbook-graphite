@@ -19,15 +19,15 @@
 
 dep_packages = case node['platform_family']
                when 'debian'
-                packages = %w{ python-simplejson }
-                include_recipe 'python::pip'
-                python_pip 'twisted' do
-                  action :install
-                end
+                packages = %w{ python-twisted python-simplejson }
                 packages
                when 'rhel', 'fedora'
                 if node.platform_version.to_i < 6
-                  packages = %w{ python-twisted-core python-simplejson }
+                  packages = %w{ python-simplejson }
+                  include_recipe 'python::pip'
+                    python_pip 'twisted' do
+                    action :install
+                  end
                 else
                   packages = %w{ python-twisted python-simplejson }
                 end
