@@ -13,11 +13,9 @@ platforms:
 - name: centos-6.4
   run_list:
   - recipe[yum]
-  - recipe[yum::epel]
 - name: centos-5.9
   run_list:
   - recipe[yum]
-  - recipe[yum::epel]
 
 suites:
 - name: default
