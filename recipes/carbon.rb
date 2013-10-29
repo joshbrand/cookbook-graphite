@@ -17,8 +17,26 @@
 # limitations under the License.
 #
 
-package 'python-twisted'
-package 'python-simplejson'
+dep_packages = case node['platform_family']
+               when 'debian'
+                 packages = %w{ python-twisted python-simplejson }
+
+                 packages
+               when 'rhel', 'fedora'
+                if platform_version.to_i < 6
+                  packages = %w{ python-twisted-core python-simplejson }
+                else
+                  packages = %w{ python-twisted python-simplejson }
+                end
+                 packages
+               end
+
+dep_packages.each do |pkg|
+  package pkg do
+    action :install
+  end
+end
+
 
 if node['graphite']['carbon']['enable_amqp']
   include_recipe 'python::pip'
