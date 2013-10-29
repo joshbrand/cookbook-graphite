@@ -17,32 +17,9 @@
 # limitations under the License.
 #
 
-dep_packages = case node['platform_family']
-               when 'debian'
-                packages = %w{ python-twisted python-simplejson }
-                packages
-               when 'rhel', 'fedora'
-                if node.platform_version.to_i < 6
-                  packages = %w{ python-simplejson }
-                  include_recipe 'python::pip'
-                    python_pip 'twisted' do
-                    action :install
-                  end
-                else
-                  packages = %w{ python-twisted python-simplejson }
-                end
-                 packages
-               end
-
-dep_packages.each do |pkg|
-  package pkg do
-    action :install
-  end
-end
-
+include_recipe 'python::pip'
 
 if node['graphite']['carbon']['enable_amqp']
-  include_recipe 'python::pip'
   python_pip 'txamqp' do
     action :install
   end
@@ -69,6 +46,11 @@ execute 'untar carbon' do
   command "tar xzof carbon-#{version}.tar.gz"
   creates "#{Chef::Config[:file_cache_path]}/carbon-#{version}"
   cwd Chef::Config[:file_cache_path]
+end
+
+execute 'install requirements' do
+  command "pip install -r requirements.txt"
+  cwd "#{Chef::Config[:file_cache_path]}/carbon-#{version}"
 end
 
 execute 'install carbon' do
