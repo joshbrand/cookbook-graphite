@@ -17,9 +17,18 @@
 # limitations under the License.
 #
 
-include_recipe 'python::pip'
+python_pip "Twisted" do
+  version "11.1.0"
+end
+
+python_pip "mocker" do
+  version "1.1.1"
+end
+
+python_pip "simplejson"
 
 if node['graphite']['carbon']['enable_amqp']
+  include_recipe 'python::pip'
   python_pip 'txamqp' do
     action :install
   end
@@ -46,11 +55,6 @@ execute 'untar carbon' do
   command "tar xzof carbon-#{version}.tar.gz"
   creates "#{Chef::Config[:file_cache_path]}/carbon-#{version}"
   cwd Chef::Config[:file_cache_path]
-end
-
-execute 'install requirements' do
-  command "pip install -r requirements.txt"
-  cwd "#{Chef::Config[:file_cache_path]}/carbon-#{version}"
 end
 
 execute 'install carbon' do
