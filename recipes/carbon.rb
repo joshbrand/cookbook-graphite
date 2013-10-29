@@ -23,7 +23,7 @@ dep_packages = case node['platform_family']
 
                  packages
                when 'rhel', 'fedora'
-                if platform_version.to_i < 6
+                if node.platform_version.to_i < 6
                   packages = %w{ python-twisted-core python-simplejson }
                 else
                   packages = %w{ python-twisted python-simplejson }
